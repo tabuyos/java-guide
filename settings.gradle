@@ -1,2 +1,12 @@
 rootProject.name = 'java-guide'
-
+include("basic")
+include("network")
+include("operation-system")
+include("data-structure-algorithm")
+include("database")
+include("system-design")
+include("tool")
+include("interview-guide")
+include("question")
+include("book-list")
+include("other")
