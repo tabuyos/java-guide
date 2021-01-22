@@ -65,20 +65,20 @@ subprojects {
         options.encoding = "UTF-8"
     }
 
-    task createBuildScript {
-        File file = new File("${projectDir}/build.gradle")
-        if (!file.exists()) {
-            file.createNewFile()
-        }
-    }
-
     task createSrcDirs {
-        dependsOn(createBuildScript)
         sourceSets*.java.srcDirs*.each {
             it.mkdirs()
         }
         sourceSets*.resources.srcDirs*.each {
             it.mkdirs()
+        }
+    }
+
+    task createBuildScript {
+        dependsOn(createSrcDirs)
+        File file = new File("${projectDir}${File.separator}build.gradle")
+        if (!file.exists()) {
+            file.createNewFile()
         }
     }
 }
