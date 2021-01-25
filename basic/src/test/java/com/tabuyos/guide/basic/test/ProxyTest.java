@@ -1,0 +1,55 @@
+package com.tabuyos.guide.basic.test;
+
+import com.tabuyos.guide.basic.test.impl.SmsServiceImpl;
+import java.lang.invoke.VarHandle;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+/**
+ * <p>Description: </p>
+ * <pre>
+ *   <b>project: </b><i>java-guide</i>
+ *   <b>package: </b><i>com.tabuyos.guide.basic.test</i>
+ *   <b>class: </b><i>ProxyTest</i>
+ *   comment here.
+ * </pre>
+ *
+ * @author <pre><b>username: </b><i><a href="http://www.tabuyos.com">Tabuyos</a></i></pre>
+ * <pre><b>site: </b><i><a href="http://www.tabuyos.com">http://www.tabuyos.com</a></i></pre>
+ * <pre><b>email: </b><i>tabuyos@outlook.com</i></pre>
+ * <pre><b>description: </b><i>
+ *   <pre>
+ *     Talk is cheap, show me the code.
+ *   </pre>
+ * </i></pre>
+ * @version 0.1.0
+ * @since 0.1.0 - 1/25/21 4:15 PM
+ */
+public class ProxyTest {
+
+  @BeforeEach
+  void setUp() {
+    System.out.println("=============================== before ===============================");
+  }
+
+  @AfterEach
+  void tearDown() {
+    System.out.println("=============================== after ================================");
+  }
+
+  @Test
+  void testJdkProxy() {
+    // JDK 动态代理有一个最致命的问题是其只能代理实现了接口的类
+    SmsService service = (SmsService) JdkProxyFactory.getProxy(new SmsServiceImpl());
+    service.send("tabuyos");
+  }
+
+  @Test
+  void testCglibProxy() {
+    // CGLIB 可以代理未实现任何接口的类
+    AliSmsService service = (AliSmsService) CglibProxyFactory.getProxy(AliSmsService.class);
+    service.send("tabuyos");
+    //hinote 相对来说, jdk代理更加优秀, cglib只是弥补了一定的弱项
+  }
+}
