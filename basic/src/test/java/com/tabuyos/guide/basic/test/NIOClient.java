@@ -3,7 +3,6 @@ package com.tabuyos.guide.basic.test;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -13,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * <pre>
  *   <b>project: </b><i>java-guide</i>
  *   <b>package: </b><i>com.tabuyos.guide.basic.test</i>
- *   <b>class: </b><i>BIOClient</i>
+ *   <b>class: </b><i>NIOClient</i>
  *   comment here.
  * </pre>
  *
@@ -28,9 +27,9 @@ import java.util.concurrent.TimeUnit;
  * </i></pre>
  *
  * @version 0.1.0
- * @since 0.1.0 - 1/25/21 5:13 PM
+ * @since 0.1.0 - 1/26/21 10:01 AM
  */
-public class BIOClient {
+public class NIOClient {
 
   public static void main(String[] args) {
     twoVersion();
@@ -60,19 +59,20 @@ public class BIOClient {
     String host = "127.0.0.1";
     int port = 3333;
     new Thread(
-        () -> {
-          try {
-            Socket socket = new Socket(host, port);
-            // 开启轮询
-            while (true) {
-              socket.getOutputStream().write((new Date() + ": hello tabuyos").getBytes(
-                  StandardCharsets.UTF_8));
-              TimeUnit.SECONDS.sleep(3);
-            }
-          } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-          }
-        }
-    ).start();
+            () -> {
+              try {
+                Socket socket = new Socket(host, port);
+                // 开启轮询
+                while (true) {
+                  socket
+                      .getOutputStream()
+                      .write((new Date() + ": hello tabuyos").getBytes(StandardCharsets.UTF_8));
+                  TimeUnit.SECONDS.sleep(3);
+                }
+              } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+              }
+            })
+        .start();
   }
 }

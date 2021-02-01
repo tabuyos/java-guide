@@ -31,36 +31,74 @@ import java.net.Socket;
 public class BIOServer {
 
   public static void main(String[] args) throws IOException {
+    twoVersion();
+  }
+
+  private static void oneVersion() throws IOException {
     ServerSocket serverSocket = new ServerSocket(3333);
 
     // 接收到客户端连接请求之后为每个客户端创建一个新的线程进行链路处理
     new Thread(
-            () -> {
-              while (true) {
-                try {
-                  // 阻塞方法获取新的连接
-                  Socket socket = serverSocket.accept();
-                  // 每一个新的连接都创建一个线程，负责读取数据
-                  new Thread(
-                          () -> {
-                            try {
-                              int len;
-                              byte[] data = new byte[1024];
-                              InputStream inputStream = socket.getInputStream();
-                              // 按字节流方式读取数据
-                              while ((len = inputStream.read(data)) != -1) {
-                                System.out.println(new String(data, 0, len));
-                              }
-                            } catch (IOException e) {
-                              //
-                            }
-                          })
-                      .start();
-                } catch (IOException e) {
-                  //
-                }
-              }
-            })
+        () -> {
+          while (true) {
+            try {
+              // 阻塞方法获取新的连接
+              Socket socket = serverSocket.accept();
+              // 每一个新的连接都创建一个线程，负责读取数据
+              new Thread(
+                  () -> {
+                    try {
+                      int len;
+                      byte[] data = new byte[1024];
+                      InputStream inputStream = socket.getInputStream();
+                      // 按字节流方式读取数据
+                      while ((len = inputStream.read(data)) != -1) {
+                        System.out.println(new String(data, 0, len));
+                      }
+                    } catch (IOException e) {
+                      //
+                    }
+                  })
+                  .start();
+            } catch (IOException e) {
+              //
+            }
+          }
+        })
         .start();
   }
+
+  private static void twoVersion() throws IOException {
+    String host = "127.0.0.1";
+    int port = 3333;
+    ServerSocket server = new ServerSocket(port);
+    new Thread(
+        () -> {
+          while (true) {
+            try {
+              // 阻塞方法同时获取新的连接
+              Socket socket = server.accept();
+              // 使用新线程处理请求
+              new Thread(
+                  () -> {
+                    try {
+                      int len;
+                      byte[] data = new byte[1024];
+                      InputStream inputStream = socket.getInputStream();
+                      while ((len = inputStream.read(data)) != -1){
+                        System.out.println(new String(data, 0, len));
+                      }
+                    } catch (IOException e) {
+                      e.printStackTrace();
+                    }
+                  }
+              ).start();
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+          }
+        }
+    ).start();
+  }
+
 }
